@@ -1,0 +1,15 @@
+# Use root/example as user/password credentials
+
+version: '3'
+
+services:
+  db:
+    image: mysqldemo
+    command: --init-file /app/create-database.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: demo
+      MYSQL_USER: root
+      MYSQL_PASSWORD: example
+    ports:
+      - "33061:3306"

@@ -1,0 +1,8 @@
+--CREATE DATABASE demo CHARACTER SET utf8 COLLATE utf8_general_cli;
+
+CREATE USER 'demo'@'%' IDENTIFIED BY 'demo';
+GRANT ALL PRIVILEGES ON demo.* TO 'demo'@'%' WITH GRANT OPTION;
+CREATE USER 'demo'@'localhost' IDENTIFIED BY 'demo';
+GRANT ALL PRIVILEGES ON demo.* TO 'demo'@'localhost' WITH GRANT OPTION;
+
+FLUSH PRIVILEGES;
