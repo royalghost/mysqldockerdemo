@@ -1,12 +1,11 @@
-# Running MySQL in a docker
+# Running MySQL Server with a docker
 
 Running MySQL community edition server in a docker container
 
 # Purpose
-Demonstrate the purpose of using Docker in running database
+Demonstrate the purpose of using Docker container to deploy a database
 
-
-# Creating Docker πImage
+# Creating Docker Image
 ## Clone this repo
 ```git clone https://github.com/royalghost/mysqldockerdemo```
 
@@ -17,7 +16,8 @@ $ls
 Dockerfile create-database.sql	docker-compose.yml
 
 ```
-### Docker file
+### Dockerfile 
+Container Definition as follows:
 
 ```
 # To download the MySQL Community Server Image
@@ -31,7 +31,9 @@ COPY . /app
 
 ```
 
-### Docker Compose file
+### docker-compose.yml 
+A YAML file that defines how docker containers should behave as follows:
+
 ```
 # Use root/example as user/password credentials
 
@@ -43,20 +45,21 @@ services:
     command: --init-file /app/create-database.sql
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: devday
+      MYSQL_DATABASE: demo
       MYSQL_USER: root
       MYSQL_PASSWORD: example
     ports:
       - "33061:3306"
 ```
-### Database script to initialize
+### create-database.sql
+Database script to initialize during startup
 ```
 --CREATE DATABASE demo CHARACTER SET utf8 COLLATE utf8_general_cli;
 
-CREATE USER 'demo'@'%' IDENTIFIED BY demo;
+CREATE USER 'demo'@'%' IDENTIFIED BY 'demo';
 GRANT ALL PRIVILEGES ON demo.* TO 'demo'@'%' WITH GRANT OPTION;
-CREATE USER 'demo'@'localhost' IDENTIFIED BY 'devday';
-GRANT ALL PRIVILEGES ON devday.* TO 'devday'@'localhost' WITH GRANT OPTION;
+CREATE USER 'demo'@'localhost' IDENTIFIED BY 'demo';
+GRANT ALL PRIVILEGES ON demo.* TO 'demo'@'localhost' WITH GRANT OPTION;
 
 FLUSH PRIVILEGES;
 ```
@@ -75,7 +78,9 @@ mysqldemo            latest              65735dbe7839        45 seconds ago     
 mysql/mysql-server   latest              1fdf3806e715        7 weeks ago         309MB
 ```
 
-## Enable docker swarm
+## Set up your swarm
+Enable swarm mode and make your machine as a swarm manager
+
 ```docker swarm init```
 
 ## Run MySQL as a service in a docker container using the image created through docker-compose.yml
@@ -105,6 +110,8 @@ docker service ls
 ID                  NAME                  MODE                REPLICAS            IMAGE               PORTS
 rxc7xl0bzt68        mysqldemoservice_db   replicated          0/1                 mysqldemo:latest    *:33061->3306/tcp
 ```
+It is now running in only 1 container instances.
+
 ## Run mysql as docker command
 ```
 docker exec -it 72459de0a7f1 mysql -uroot -p
